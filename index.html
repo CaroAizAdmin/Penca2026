@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PENCA MUNDIAL 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #fab62b;
+    --dark: #171810;
+    --white: #ffffff;
+    --gold-dim: rgba(250,182,43,0.15);
+    --gold-mid: rgba(250,182,43,0.4);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.5;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(23,24,16,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(250,182,43,0.08);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.08em;
+    color: var(--white);
+  }
+  .nav-logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    text-decoration: none; color: rgba(255,255,255,0.5);
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative; text-align: center;
+    padding: 2rem; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(250,182,43,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(250,182,43,0.08) 0%, transparent 60%),
+      var(--dark);
+  }
+  .hero-ball {
+    position: absolute;
+    width: 520px; height: 520px;
+    border-radius: 50%;
+    border: 1px solid rgba(250,182,43,0.12);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation: rotateBall 40s linear infinite;
+  }
+  .hero-ball::before {
+    content: ''; position: absolute; inset: 30px;
+    border-radius: 50%; border: 1px solid rgba(250,182,43,0.08);
+  }
+  .hero-ball::after {
+    content: ''; position: absolute; inset: 80px;
+    border-radius: 50%; border: 1px solid rgba(250,182,43,0.05);
+  }
+  @keyframes rotateBall {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+  .line-deco {
+    position: absolute;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    height: 1px; width: 60%; opacity: 0.3;
+  }
+  .line-deco.top { top: 120px; left: 20%; }
+  .line-deco.bottom { bottom: 120px; left: 20%; }
+  .hero-content { position: relative; z-index: 2; }
+  .hero-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem; font-weight: 600;
+    letter-spacing: 0.4em; color: var(--gold);
+    text-transform: uppercase; margin-bottom: 1.2rem;
+    animation: fadeUp 0.8s ease forwards; opacity: 0; animation-delay: 0.1s;
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 18vw, 14rem);
+    line-height: 0.9; letter-spacing: 0.02em; color: var(--white);
+    animation: fadeUp 0.8s ease forwards; opacity: 0; animation-delay: 0.2s;
+  }
+  .hero-title span { color: var(--gold); display: block; }
+  .hero-year {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 10vw, 8rem);
+    color: transparent; -webkit-text-stroke: 1px rgba(250,182,43,0.4);
+    letter-spacing: 0.08em; line-height: 1;
+    animation: fadeUp 0.8s ease forwards; opacity: 0; animation-delay: 0.3s;
+  }
+  .hero-dates {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.1rem; font-weight: 600; letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.6); margin-top: 1.5rem; text-transform: uppercase;
+    animation: fadeUp 0.8s ease forwards; opacity: 0; animation-delay: 0.4s;
+  }
+  .hero-dates strong { color: var(--gold); }
+  .hero-cta {
+    margin-top: 2.5rem; display: inline-block;
+    padding: 1rem 3rem; background: var(--gold); color: var(--dark);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.1rem; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; text-decoration: none;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    transition: background 0.2s, transform 0.2s;
+    animation: fadeUp 0.8s ease forwards; opacity: 0; animation-delay: 0.55s;
+  }
+  .hero-cta:hover { background: #ffd06e; transform: scale(1.04); }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .scroll-hint {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; letter-spacing: 0.3em;
+    color: rgba(255,255,255,0.3); text-transform: uppercase;
+    animation: fadeIn 1.5s ease 1.2s forwards; opacity: 0;
+  }
+  .scroll-dot {
+    width: 1px; height: 40px;
+    background: linear-gradient(180deg, var(--gold), transparent);
+    animation: scrollPulse 2s ease infinite;
+  }
+  @keyframes scrollPulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  /* ── SECTIONS ── */
+  section { padding: 5rem 1.5rem; max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.45em;
+    color: var(--gold); text-transform: uppercase; margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    line-height: 1; letter-spacing: 0.02em; margin-bottom: 2.5rem;
+  }
+  .divider {
+    width: 100%; height: 1px;
+    background: linear-gradient(90deg, var(--gold) 0%, rgba(250,182,43,0.1) 60%, transparent 100%);
+  }
+
+  /* ── ETAPAS ── */
+  #etapas { padding-top: 6rem; }
+  .stages-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px; background: rgba(250,182,43,0.12); border: 1px solid rgba(250,182,43,0.12);
+    margin-top: 1rem;
+  }
+  .stage-card {
+    background: var(--dark); padding: 2rem 1.5rem;
+    position: relative; transition: background 0.25s; overflow: hidden;
+  }
+  .stage-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: var(--gold-dim); opacity: 0; transition: opacity 0.25s;
+  }
+  .stage-card:hover::before { opacity: 1; }
+  .stage-num {
+    font-family: 'Bebas Neue', sans-serif; font-size: 4rem;
+    color: rgba(250,182,43,0.12); line-height: 1;
+    position: absolute; top: 1rem; right: 1.2rem;
+  }
+  .stage-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+  .stage-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.35rem; font-weight: 700; letter-spacing: 0.05em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 0.3rem;
+  }
+  .stage-dates {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.95rem; font-weight: 600;
+    color: rgba(255,255,255,0.5); letter-spacing: 0.06em; margin-bottom: 0.6rem;
+  }
+  .stage-desc { font-size: 0.88rem; color: rgba(255,255,255,0.65); line-height: 1.55; }
+
+  /* ── PUNTOS ── */
+  #puntos { border-top: 1px solid rgba(250,182,43,0.1); }
+  .points-system { display: flex; flex-direction: column; margin-top: 0.5rem; }
+  .point-row {
+    display: grid; grid-template-columns: auto 1fr auto;
+    align-items: center; gap: 1.5rem; padding: 1.4rem 1.8rem;
+    border: 1px solid rgba(250,182,43,0.08); border-bottom: none;
+    transition: background 0.2s;
+  }
+  .point-row:last-child { border-bottom: 1px solid rgba(250,182,43,0.08); }
+  .point-row:hover { background: var(--gold-dim); }
+  .point-score {
+    font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem;
+    color: var(--gold); line-height: 1; min-width: 70px; text-align: center;
+  }
+  .point-score.zero { color: rgba(255,255,255,0.2); }
+  .point-name {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 1.2rem;
+    font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.2rem;
+  }
+  .point-desc { font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.5; }
+  .point-badge {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem;
+    font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.3rem 0.8rem;
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  }
+  .badge-gold { background: var(--gold); color: var(--dark); }
+  .badge-silver { background: rgba(255,255,255,0.15); color: var(--white); }
+  .badge-bronze { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
+  .badge-none { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.25); }
+  .points-note {
+    margin-top: 1.5rem; padding: 1.2rem 1.5rem;
+    border-left: 3px solid var(--gold); background: var(--gold-dim);
+    font-size: 0.88rem; color: rgba(255,255,255,0.7); line-height: 1.6;
+  }
+  .points-note strong { color: var(--gold); }
+
+  /* ── REGLAS ── */
+  #reglas { border-top: 1px solid rgba(250,182,43,0.1); }
+  .rules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
+  .rule-card { border: 1px solid rgba(250,182,43,0.15); padding: 2rem; position: relative; overflow: hidden; }
+  .rule-card::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease;
+  }
+  .rule-card:hover::after { transform: scaleX(1); }
+  .rule-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
+  .rule-title {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 1.15rem;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--gold); margin-bottom: 0.6rem;
+  }
+  .rule-text { font-size: 0.9rem; color: rgba(255,255,255,0.65); line-height: 1.65; }
+
+  /* ── PREMIOS ── */
+  #premios { border-top: 1px solid rgba(250,182,43,0.1); }
+
+  .prizes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    align-items: end;
+  }
+
+  .prize-card {
+    border: 1px solid rgba(250,182,43,0.15);
+    position: relative; overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: rgba(255,255,255,0.02);
+  }
+  .prize-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(250,182,43,0.12);
+  }
+  .prize-card.first {
+    border-color: rgba(250,182,43,0.4);
+  }
+  .prize-card.first::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at top, rgba(250,182,43,0.07) 0%, transparent 65%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .prize-header {
+    padding: 1.2rem 1.5rem 1rem;
+    border-bottom: 1px solid rgba(250,182,43,0.1);
+    position: relative; z-index: 1;
+  }
+  .prize-pos-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.35em;
+    text-transform: uppercase; color: rgba(255,255,255,0.3);
+    display: block; margin-bottom: 0.25rem;
+  }
+  .prize-pos-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem; line-height: 1; letter-spacing: 0.03em;
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+  .first .prize-pos-title { color: var(--gold); }
+  .second .prize-pos-title { color: #b8b8b8; }
+  .third .prize-pos-title { color: #c08050; }
+
+  .prize-img-wrap {
+    width: 100%; overflow: hidden;
+    background: #1a1b12;
+    aspect-ratio: 4/3;
+    position: relative; z-index: 1;
+  }
+  .prize-card.first .prize-img-wrap { aspect-ratio: 3/2.5; }
+
+  .prize-img-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+    filter: saturate(0.85) brightness(0.88);
+    transition: transform 0.5s ease, filter 0.4s ease;
+    display: block;
+  }
+  .prize-card:hover .prize-img-wrap img {
+    transform: scale(1.06);
+    filter: saturate(1.05) brightness(1);
+  }
+
+  .prize-body {
+    padding: 1.1rem 1.5rem 1.4rem;
+    position: relative; z-index: 1;
+  }
+  .prize-item-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.2rem; font-weight: 700;
+    letter-spacing: 0.07em; text-transform: uppercase;
+    margin-bottom: 0.35rem;
+  }
+  .first .prize-item-name { color: var(--gold); }
+  .second .prize-item-name { color: #b8b8b8; }
+  .third .prize-item-name { color: #c08050; }
+
+  .prize-tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.15em;
+    text-transform: uppercase; color: rgba(255,255,255,0.3);
+  }
+
+  /* ── INSCRIPCION / FORMULARIO ── */
+  #inscripcion { border-top: 1px solid rgba(250,182,43,0.1); }
+
+  .form-wrap {
+    margin-top: 2rem;
+    border: 1px solid rgba(250,182,43,0.2);
+    padding: 3rem;
+    position: relative; overflow: hidden;
+    background: linear-gradient(135deg, rgba(250,182,43,0.05) 0%, transparent 60%);
+  }
+  .form-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+
+  .form-intro { text-align: center; margin-bottom: 2.5rem; }
+  .form-intro-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1; margin-bottom: 0.5rem;
+  }
+  .form-intro-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.95rem; letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.4); text-transform: uppercase;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+    max-width: 580px;
+    margin: 0 auto;
+    position: relative; z-index: 1;
+  }
+  .form-grid .full { grid-column: 1 / -1; }
+
+  .field-group { display: flex; flex-direction: column; gap: 0.45rem; }
+  .field-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.25em;
+    text-transform: uppercase; color: rgba(255,255,255,0.4);
+  }
+  .field-label .req { color: var(--gold); margin-left: 2px; }
+  .field-label .opt { color: rgba(250,182,43,0.45); font-weight: 400; font-size: 0.68rem; margin-left: 4px; letter-spacing: 0; }
+
+  .field-input {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(250,182,43,0.18);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif; font-size: 1rem;
+    padding: 0.85rem 1rem;
+    outline: none; width: 100%;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .field-input::placeholder { color: rgba(255,255,255,0.18); }
+  .field-input:focus {
+    border-color: var(--gold);
+    background: rgba(250,182,43,0.05);
+  }
+  .field-input.error { border-color: #ff5252 !important; }
+
+  .ig-wrap {
+    display: flex;
+    border: 1px solid rgba(250,182,43,0.18);
+    transition: border-color 0.2s;
+    background: rgba(255,255,255,0.04);
+  }
+  .ig-wrap:focus-within {
+    border-color: var(--gold);
+    background: rgba(250,182,43,0.05);
+  }
+  .ig-at {
+    display: flex; align-items: center;
+    padding: 0 0.8rem;
+    color: var(--gold);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.1rem; font-weight: 700;
+    border-right: 1px solid rgba(250,182,43,0.15);
+    flex-shrink: 0;
+  }
+  .ig-wrap .field-input {
+    border: none; background: transparent; flex: 1;
+  }
+  .ig-wrap .field-input:focus { border: none; background: transparent; }
+  .ig-wrap.error { border-color: #ff5252 !important; }
+
+  .btn-submit {
+    display: block;
+    width: 100%; max-width: 580px;
+    margin: 1.8rem auto 0;
+    padding: 1.2rem 2rem;
+    background: var(--gold); color: var(--dark);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem; letter-spacing: 0.12em;
+    text-align: center; cursor: pointer;
+    border: none;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    position: relative; z-index: 1;
+  }
+  .btn-submit:hover:not(:disabled) {
+    background: #ffd06e;
+    transform: scale(1.02);
+    box-shadow: 0 0 40px rgba(250,182,43,0.3);
+  }
+  .btn-submit:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+  .pay-note {
+    text-align: center; margin-top: 0.85rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.78rem; letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.22); text-transform: uppercase;
+    position: relative; z-index: 1;
+  }
+
+  /* Mensajes de resultado */
+  .form-msg {
+    display: none; text-align: center;
+    padding: 2.5rem; margin-top: 1.5rem;
+    max-width: 580px; margin-left: auto; margin-right: auto;
+    position: relative; z-index: 1;
+  }
+  .form-msg.show { display: block; }
+  .form-msg.success {
+    border: 1px solid rgba(250,182,43,0.35);
+    background: rgba(250,182,43,0.07);
+  }
+  .form-msg.error-msg {
+    border: 1px solid rgba(255,82,82,0.35);
+    background: rgba(255,82,82,0.07);
+  }
+  .form-msg-icon { font-size: 2.5rem; margin-bottom: 0.6rem; display: block; }
+  .form-msg-title {
+    font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .success .form-msg-title { color: var(--gold); }
+  .error-msg .form-msg-title { color: #ff5252; }
+  .form-msg-text { font-size: 0.95rem; color: rgba(255,255,255,0.6); line-height: 1.65; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid rgba(250,182,43,0.1);
+    padding: 2rem 1.5rem; text-align: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem; letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.2); text-transform: uppercase;
+  }
+  footer span { color: var(--gold); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .prizes-grid { grid-template-columns: 1fr; gap: 1rem; }
+    .prize-card.first { order: -1; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-grid .full { grid-column: 1; }
+    .form-wrap { padding: 2rem 1.2rem; }
+  }
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .point-row { grid-template-columns: auto 1fr; }
+    .point-badge { display: none; }
+    section { padding: 4rem 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">PENCA <span>2026</span></div>
+  <ul class="nav-links">
+    <li><a href="#etapas">Etapas</a></li>
+    <li><a href="#puntos">Puntos</a></li>
+    <li><a href="#reglas">Reglas</a></li>
+    <li><a href="#premios">Premios</a></li>
+    <li><a href="#inscripcion">Inscribirse</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-ball"></div>
+  <div class="line-deco top"></div>
+  <div class="line-deco bottom"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">⚽ Guía de Participación</p>
+    <h1 class="hero-title">PENCA<span>MUNDIAL</span></h1>
+    <div class="hero-year">2026</div>
+    <p class="hero-dates">
+      <strong>11 JUN</strong> &nbsp;—&nbsp; <strong>19 JUL 2026</strong>
+      &nbsp;·&nbsp; USA · MÉXICO · CANADÁ
+    </p>
+    <a href="#inscripcion" class="hero-cta">Quiero participar</a>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-dot"></div>
+    Conocé las bases
+  </div>
+</div>
+
+<!-- ETAPAS -->
+<section id="etapas">
+  <p class="section-label">⚽ El torneo</p>
+  <h2 class="section-title">ETAPAS DEL MUNDIAL</h2>
+  <div class="divider"></div>
+  <div class="stages-grid">
+    <div class="stage-card">
+      <div class="stage-num">01</div>
+      <div class="stage-icon">🗓️</div>
+      <div class="stage-name">Fase de Grupos</div>
+      <div class="stage-dates">11 – 27 JUN 2026</div>
+      <div class="stage-desc">48 selecciones en 12 grupos de 4. Los dos primeros de cada grupo y los mejores terceros avanzan.</div>
+    </div>
+    <div class="stage-card">
+      <div class="stage-num">02</div>
+      <div class="stage-icon">⚡</div>
+      <div class="stage-name">Octavos de Final</div>
+      <div class="stage-dates">29 JUN – 4 JUL 2026</div>
+      <div class="stage-desc">32 equipos, eliminación directa. El ganador avanza; el perdedor queda afuera.</div>
+    </div>
+    <div class="stage-card">
+      <div class="stage-num">03</div>
+      <div class="stage-icon">🔥</div>
+      <div class="stage-name">Cuartos de Final</div>
+      <div class="stage-dates">8 – 11 JUL 2026</div>
+      <div class="stage-desc">Los 8 mejores del mundo se enfrentan. Solo 4 pasan. La adrenalina al máximo.</div>
+    </div>
+    <div class="stage-card">
+      <div class="stage-num">04</div>
+      <div class="stage-icon">🌟</div>
+      <div class="stage-name">Semifinales</div>
+      <div class="stage-dates">14 – 15 JUL 2026</div>
+      <div class="stage-desc">Las 4 grandes potencias se juegan el pase a la final. El partido por el tercer puesto también suma.</div>
+    </div>
+    <div class="stage-card">
+      <div class="stage-num">05</div>
+      <div class="stage-icon">🏆</div>
+      <div class="stage-name">FINAL</div>
+      <div class="stage-dates">19 JUL 2026</div>
+      <div class="stage-desc">El partido más importante del planeta. MetLife Stadium, Nueva York/Nueva Jersey.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PUNTOS -->
+<section id="puntos">
+  <p class="section-label">🎯 Sistema de puntaje</p>
+  <h2 class="section-title">¿CÓMO SE PUNTÚA?</h2>
+  <div class="divider"></div>
+  <div class="points-system">
+    <div class="point-row">
+      <div class="point-score">+8</div>
+      <div class="point-info">
+        <div class="point-name">Resultado Exacto</div>
+        <div class="point-desc">Acertás el marcador exacto del partido. Ej: pronosticás 2-1 y termina 2-1.</div>
+      </div>
+      <div class="point-badge badge-gold">Máximo</div>
+    </div>
+    <div class="point-row">
+      <div class="point-score">+5</div>
+      <div class="point-info">
+        <div class="point-name">Ganador + Diferencia de Goles</div>
+        <div class="point-desc">Acertás quién gana y por cuántos goles, pero no el marcador exacto. Ej: pronosticás 3-1, termina 2-0.</div>
+      </div>
+      <div class="point-badge badge-silver">Alto</div>
+    </div>
+    <div class="point-row">
+      <div class="point-score">+3</div>
+      <div class="point-info">
+        <div class="point-name">Acertás el Ganador o el Empate</div>
+        <div class="point-desc">Sabés quién gana (o que empata) pero no la diferencia exacta.</div>
+      </div>
+      <div class="point-badge badge-bronze">Medio</div>
+    </div>
+    <div class="point-row">
+      <div class="point-score zero">+0</div>
+      <div class="point-info">
+        <div class="point-name">Fallo</div>
+        <div class="point-desc">El pronóstico no coincide con ninguna categoría. Sin puntos en este partido.</div>
+      </div>
+      <div class="point-badge badge-none">Sin puntos</div>
+    </div>
+  </div>
+  <div class="points-note">
+    ⚠️ <strong>Importante:</strong> Los puntos se calculan sobre los <strong>90 minutos oficiales</strong> incluyendo el tiempo de descuento. El tiempo suplementario (prórroga) y los penales <strong>no se tienen en cuenta</strong> para el puntaje.
+  </div>
+</section>
+
+<!-- REGLAS -->
+<section id="reglas">
+  <p class="section-label">📋 Cómo funciona</p>
+  <h2 class="section-title">REGLAS DE PARTICIPACIÓN</h2>
+  <div class="divider"></div>
+  <div class="rules-grid">
+    <div class="rule-card">
+      <span class="rule-icon">⏰</span>
+      <div class="rule-title">Cierre de pronósticos</div>
+      <div class="rule-text">Los pronósticos se cierran automáticamente al inicio de cada partido. <strong style="color:var(--gold)">Ingresá tus pronósticos con anticipación.</strong></div>
+    </div>
+    <div class="rule-card">
+      <span class="rule-icon">📊</span>
+      <div class="rule-title">Ranking en tiempo real</div>
+      <div class="rule-text">El ranking se actualiza automáticamente después de cada partido. Podés ver tu posición en cualquier momento.</div>
+    </div>
+    <div class="rule-card">
+      <span class="rule-icon">⚽</span>
+      <div class="rule-title">Tiempo reglamentario</div>
+      <div class="rule-text">Todos los puntajes se basan en el resultado a los 90 minutos + descuento. La prórroga y los penales no cuentan.</div>
+    </div>
+    <div class="rule-card">
+      <span class="rule-icon">🌐</span>
+      <div class="rule-title">Participación online</div>
+      <div class="rule-text">Todo es digital. Ingresás tus pronósticos desde el celular o la computadora y seguís el ranking en vivo.</div>
+    </div>
+    <div class="rule-card">
+      <span class="rule-icon">🔢</span>
+      <div class="rule-title">Todos los partidos</div>
+      <div class="rule-text">Podés pronosticar todos los partidos, desde la fase de grupos hasta la gran final.</div>
+    </div>
+    <div class="rule-card">
+      <span class="rule-icon">🏅</span>
+      <div class="rule-title">Clasificación final</div>
+      <div class="rule-text">Al terminar el Mundial, el ranking definitivo determina los ganadores. Se aplicarán criterios de desempate si es necesario.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PREMIOS -->
+<section id="premios">
+  <p class="section-label">🏆 Lo que te llevás</p>
+  <h2 class="section-title">PREMIOS</h2>
+  <div class="divider"></div>
+
+  <div class="prizes-grid">
+
+    <!-- 2do puesto -->
+    <div class="prize-card second">
+      <div class="prize-header">
+        <span class="prize-pos-eyebrow">Ranking final</span>
+        <div class="prize-pos-title">🥈 Segundo Puesto</div>
+      </div>
+      <div class="prize-img-wrap">
+        <img src="https://res.cloudinary.com/dhivsjwqh/image/upload/q_auto/f_auto/v1778652039/image_2_mhyicv.png" alt="Juego de mesa"
+          onerror="this.style.display='none';this.parentElement.style.display='flex';this.parentElement.style.alignItems='center';this.parentElement.style.justifyContent='center';this.parentElement.innerHTML='<span style=\'font-size:4rem\'>🎮</span>'">
+      </div>
+      <div class="prize-body">
+        <div class="prize-item-name">Juego de Mesa</div>
+        <div class="prize-tag">2° lugar en el ranking</div>
+      </div>
+    </div>
+
+    <!-- 1er puesto (centro, destacado) -->
+    <div class="prize-card first">
+      <div class="prize-header">
+        <span class="prize-pos-eyebrow">Ranking final</span>
+        <div class="prize-pos-title">🥇 Primer Puesto</div>
+      </div>
+      <div class="prize-img-wrap">
+        <img src="https://res.cloudinary.com/dhivsjwqh/image/upload/q_auto/f_auto/v1778652043/image_1_ftognb.png" alt="Picada completa"
+          onerror="this.style.display='none';this.parentElement.style.display='flex';this.parentElement.style.alignItems='center';this.parentElement.style.justifyContent='center';this.parentElement.innerHTML='<span style=\'font-size:4rem\'>🍖</span>'">
+      </div>
+      <div class="prize-body">
+        <div class="prize-item-name">Picada Completa</div>
+        <div class="prize-tag">1° lugar en el ranking</div>
+      </div>
+    </div>
+
+    <!-- 3er puesto -->
+    <div class="prize-card third">
+      <div class="prize-header">
+        <span class="prize-pos-eyebrow">Ranking final</span>
+        <div class="prize-pos-title">🥉 Tercer Puesto</div>
+      </div>
+      <div class="prize-img-wrap">
+        <img src="https://res.cloudinary.com/dhivsjwqh/image/upload/q_auto/f_auto/v1778652030/image_3_kiietr.png" alt="Postre dulce"
+          onerror="this.style.display='none';this.parentElement.style.display='flex';this.parentElement.style.alignItems='center';this.parentElement.style.justifyContent='center';this.parentElement.innerHTML='<span style=\'font-size:4rem\'>🎂</span>'">
+      </div>
+      <div class="prize-body">
+        <div class="prize-item-name">Postre Dulce</div>
+        <div class="prize-tag">3° lugar en el ranking</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- INSCRIPCION -->
+<section id="inscripcion">
+  <p class="section-label">✅ Unite a la penca</p>
+  <h2 class="section-title">INSCRIBIRSE</h2>
+  <div class="divider"></div>
+
+  <div class="form-wrap">
+
+    <div class="form-intro">
+      <div class="form-intro-title">¿ESTÁS LISTO<br>PARA COMPETIR?</div>
+      <div class="form-intro-sub">Completá tus datos · El Mundial arranca el 11 de Junio</div>
+    </div>
+
+    <div id="formFields">
+      <div class="form-grid">
+        <div class="field-group">
+          <label class="field-label" for="nombre">Nombre <span class="req">*</span></label>
+          <input class="field-input" type="text" id="nombre" placeholder="Tu nombre" autocomplete="given-name">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="apellido">Apellido <span class="req">*</span></label>
+          <input class="field-input" type="text" id="apellido" placeholder="Tu apellido" autocomplete="family-name">
+        </div>
+        <div class="field-group full">
+          <label class="field-label" for="celular">Celular <span class="opt">(opcional)</span></label>
+          <input class="field-input" type="tel" id="celular" placeholder="+598 99 000 000" autocomplete="tel">
+        </div>
+        <div class="field-group full">
+          <label class="field-label" for="instagram">Instagram <span class="req">*</span></label>
+          <div class="ig-wrap">
+            <span class="ig-at">@</span>
+            <input class="field-input" type="text" id="instagram" placeholder="tuusuario" required>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-submit" id="btnSubmit" onclick="enviarFormulario()">
+        ENVIAR INSCRIPCIÓN
+      </button>
+
+      <div class="pay-note">Completá el formulario · Luego te llegará el link de pago</div>
+    </div>
+
+    <!-- Mensaje de éxito -->
+    <div class="form-msg success" id="msgOk">
+      <span class="form-msg-icon">🎉</span>
+      <div class="form-msg-title">¡ESTÁS INSCRIPTO!</div>
+      <div class="form-msg-text">Tu registro fue recibido correctamente.<br>Ya sos parte de la <strong>Penca Mundial 2026</strong>.<br>Pronto recibirás el link de pago.</div>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div class="form-msg error-msg" id="msgErr">
+      <span class="form-msg-icon">⚠️</span>
+      <div class="form-msg-title">ALGO FALLÓ</div>
+      <div class="form-msg-text">Hubo un problema al enviar tu inscripción.<br>Intentá de nuevo o contactanos directamente.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>PENCA MUNDIAL <span>2026</span> &nbsp;·&nbsp; USA · MÉXICO · CANADÁ &nbsp;·&nbsp; 11 JUN – 19 JUL</p>
+</footer>
+
+<script>
+  // ══════════════════════════════════════════════════════════════════════
+  //  PASO 1: Reemplazá esta URL con la URL de tu Google Apps Script
+  //  (seguí las instrucciones del archivo instrucciones-sheets.txt)
+  // ══════════════════════════════════════════════════════════════════════
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyQgW4moI-KlYYUgzb9IVGys-Z5JBVBTt2tAkLZF0nfFkKa2QySoI73q0Ggqm4eAb-ZEw/exec';
+
+  async function enviarFormulario() {
+    const nombre    = document.getElementById('nombre').value.trim();
+    const apellido  = document.getElementById('apellido').value.trim();
+    const celular   = document.getElementById('celular').value.trim();
+    const igRaw     = document.getElementById('instagram').value.trim();
+    const instagram = igRaw ? '@' + igRaw.replace(/^@+/, '') : '';
+
+    // Validar campos obligatorios
+    let valido = true;
+    ['nombre', 'apellido'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el.value.trim()) {
+        el.classList.add('error');
+        valido = false;
+      } else {
+        el.classList.remove('error');
+      }
+    });
+    
+    // Validar Instagram (agregar error a su contenedor)
+    const igInput = document.getElementById('instagram');
+    const igWrap = igInput.closest('.ig-wrap');
+    if (!igInput.value.trim()) {
+      igWrap.classList.add('error');
+      valido = false;
+    } else {
+      igWrap.classList.remove('error');
+    }
+    
+    if (!valido) return;
+
+    const btn = document.getElementById('btnSubmit');
+    btn.disabled = true;
+    btn.textContent = 'ENVIANDO...';
+    document.getElementById('msgErr').classList.remove('show');
+
+    const datos = {
+      nombre,
+      apellido,
+      celular,
+      instagram,
+      fecha: new Date().toLocaleString('es-UY', { timeZone: 'America/Montevideo' })
+    };
+
+    try {
+      // no-cors: el navegador no puede leer la respuesta,
+      // pero el script de Google la recibe correctamente.
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(datos)
+      });
+
+      // Ocultar formulario y mostrar éxito
+      document.getElementById('formFields').style.display = 'none';
+      document.getElementById('msgOk').classList.add('show');
+
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'ENVIAR INSCRIPCIÓN';
+      document.getElementById('msgErr').classList.add('show');
+    }
+  }
+
+  // Limpiar error al escribir
+  ['nombre', 'apellido'].forEach(id => {
+    document.getElementById(id).addEventListener('input', function () {
+      this.classList.remove('error');
+    });
+  });
+  
+  document.getElementById('instagram').addEventListener('input', function () {
+    this.closest('.ig-wrap').classList.remove('error');
+  });
+</script>
+
+</body>
+</html>
